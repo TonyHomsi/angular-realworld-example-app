@@ -1,0 +1,39 @@
+{
+    "articles": [
+        {
+            "title": "test",
+            "slug": "test-8jjje4",
+            "body": "test",
+            "createdAt": "2021-01-21T11:30:58.936Z",
+            "updatedAt": "2021-01-21T11:30:58.936Z",
+            "tagList": [],
+            "description": "test",
+            "author": {
+                "username": "dmitri",
+                "bio": null,
+                "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+                "following": false
+            },
+            "favorited": false,
+            "favoritesCount": 5
+        },
+        {
+            "title": "test post",
+            "slug": "test-post-eccbo1",
+            "body": "hey hey",
+            "createdAt": "2021-01-21T11:29:36.561Z",
+            "updatedAt": "2021-01-21T11:29:36.561Z",
+            "tagList": [],
+            "description": "hello there",
+            "author": {
+                "username": "joe123asd45",
+                "bio": null,
+                "image": "https://static.productionready.io/images/smiley-cyrus.jpg",
+                "following": false
+            },
+            "favorited": false,
+            "favoritesCount": 7
+        }
+    ],
+    "articlesCount": 500
+}
