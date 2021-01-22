@@ -1,0 +1,7 @@
+{
+    "env": {
+        "_comment": "to run Json file npx cypress open --env configFile=qa",
+        "username": "drummer.tony@gmail.com",
+        "password": "cypresstest1"
+    }
+}

@@ -4,8 +4,10 @@
     "viewportHeight": 768,
     "viewportWidth": 1920,
     "video": false,
-    "retries": {
-        "runMode": 2,
-        "openMode": 1 
+    "env": {
+        "RETRIES": 2,
+        "username": "drummer.tony@gmail.com",
+        "password": "cypresstest1",
+        "apiUrl": "https://conduit.productionready.io"
     }
 }
