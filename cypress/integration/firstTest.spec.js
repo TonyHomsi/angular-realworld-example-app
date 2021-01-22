@@ -100,14 +100,7 @@ describe('Test with backend', () => {
     })
 
 
-    it.only('delete a new article in a global feed', () => {
-
-        const userCredentials = {
-            "user": {
-                "email": "*****@gmail.com", "password": "**********"
-            }
-        }
-
+    it('delete a new article in a global feed', () => {
 
         const bodyRequest = {
             "article": {
@@ -117,9 +110,8 @@ describe('Test with backend', () => {
                 "body": "Postman"
             }
         }
-        cy.request('POST', 'https://conduit.productionready.io/api/users/login', userCredentials)
-            .its('body').then(body => {
-                const token = body.user.token
+        
+        cy.get('@token').then(token => {
 
                 cy.request({
                     url: 'https://conduit.productionready.io/api/articles/',
