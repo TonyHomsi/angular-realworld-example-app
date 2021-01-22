@@ -31,7 +31,7 @@ Cypress.Commands.add('loginToApplication', () => {
 
     const userCredentials = {
         "user": {
-            "email": "************", "password": "*******"
+            "email": 'drummer.tony@gmail.com', "password": "cypresstest1"
         }
     }
 
