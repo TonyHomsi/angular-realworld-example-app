@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
-describe('Test with backend', ()=> {
-    beforeEach('login to the app', ()=> {
+describe('Test with backend', () => {
+    beforeEach('login to the app', () => {
         // cy.server()
         // cy.route('GET','**/tags', 'fixture:tags.json') Old version
 
@@ -9,12 +9,12 @@ describe('Test with backend', ()=> {
         // cy.intercept('GET','**/tags', {fixture:'tags.json'})
 
         // 2nd way
-        cy.intercept({method:'Get', path:'tags'}, {fixture:'tags.json'})
+        cy.intercept({ method: 'Get', path: 'tags' }, { fixture: 'tags.json' })
 
         cy.loginToApplication()
     })
 
-    it('VERIFY CORRECT REQUEST AMD RESPONSE', () =>{
+    it('VERIFY CORRECT REQUEST AMD RESPONSE', () => {
 
         // cy.server()
         cy.intercept('POST', '**/articles').as('postArticles')
@@ -27,7 +27,7 @@ describe('Test with backend', ()=> {
         cy.contains('Publish Article').click()
 
         cy.wait('@postArticles')
-        cy.get('@postArticles').then( xhr =>{
+        cy.get('@postArticles').then(xhr => {
             console.log(xhr)
             //expect(xhr.status).to.equal(200)
             expect(xhr.response.statusCode).to.equal(200)
@@ -37,15 +37,15 @@ describe('Test with backend', ()=> {
 
     })
 
-    it('intercepting and modifying the request and response', () =>{
+    it('intercepting and modifying the request and response', () => {
 
         //cy.intercept('POST', '**/articles', (req) => {
-           // req.body.article.description = "This is a description 2"
+        // req.body.article.description = "This is a description 2"
         // }).as('postArticles')
 
 
         cy.intercept('POST', '**/articles', (req) => {
-            req.reply( res => {
+            req.reply(res => {
                 expect(res.body.article.description).to.equal('This is a description')
                 res.body.article.description = "This is a description 2"
             })
@@ -59,7 +59,7 @@ describe('Test with backend', ()=> {
         cy.contains('Publish Article').click()
 
         cy.wait('@postArticles')
-        cy.get('@postArticles').then( xhr =>{
+        cy.get('@postArticles').then(xhr => {
             console.log(xhr)
             //expect(xhr.status).to.equal(200)
             expect(xhr.response.statusCode).to.equal(200)
@@ -69,34 +69,81 @@ describe('Test with backend', ()=> {
 
     })
 
-    it('should gave tags with routing object' , ()=> {
+    it('should gave tags with routing object', () => {
         cy.get('.tag-list')
-        .should('contain', 'Cypress')
-        .and('contain','automation')
-        .and('contain', 'Testing')
+            .should('contain', 'Cypress')
+            .and('contain', 'automation')
+            .and('contain', 'Testing')
     })
 
-    it('verify global feed likes count', ()=> {
-        cy.intercept('GET', '**/articles/feed*', {"articles":[],"articlesCount":0})
-        cy.intercept('GET', '**/articles*', {fixture:'articles.json'})
+    it('verify global feed likes count', () => {
+        cy.intercept('GET', '**/articles/feed*', { "articles": [], "articlesCount": 0 })
+        cy.intercept('GET', '**/articles*', { fixture: 'articles.json' })
 
 
         cy.contains('Global Feed').click()
-        cy.get('app-article-list button').then( listOfbuttons =>{
+        cy.get('app-article-list button').then(listOfbuttons => {
             expect(listOfbuttons[0]).to.contain('5')
             expect(listOfbuttons[1]).to.contain('7')
         })
 
-        cy.fixture('articles').then( file => {
-            const articleLink= file.articles[1].slug
-            cy.intercept('POST','**/articles/'+articleLink+'/favorite', file)
+        cy.fixture('articles').then(file => {
+            const articleLink = file.articles[1].slug
+            cy.intercept('POST', '**/articles/' + articleLink + '/favorite', file)
         })
 
         cy.get('app-article-list button')
-        .eq(1)
-        .click()
-        .should('contain','8')
-        
+            .eq(1)
+            .click()
+            .should('contain', '8')
+
+    })
+
+
+    it.only('delete a new article in a global feed', () => {
+
+        const userCredentials = {
+            "user": {
+                "email": "*****@gmail.com", "password": "**********"
+            }
+        }
+
+
+        const bodyRequest = {
+            "article": {
+                "tagList": [],
+                "title": "Test",
+                "description": "Tony",
+                "body": "Postman"
+            }
+        }
+        cy.request('POST', 'https://conduit.productionready.io/api/users/login', userCredentials)
+            .its('body').then(body => {
+                const token = body.user.token
+
+                cy.request({
+                    url: 'https://conduit.productionready.io/api/articles/',
+                    headers: { 'Authorization': 'Token '+ token },
+                    method: 'POST',
+                    body: bodyRequest
+                }).then (response => {
+                    expect(response.status).to.equal(200)
+                })
+
+                cy.contains('Global Feed').click()
+                cy.get('.article-preview').first().click()
+                cy.get('.article-actions').contains('Delete Article').click()
+
+
+                cy.request({
+                    url: 'https://conduit.productionready.io/api/articles?limit=10&offset=0',
+                    headers: {'Authorization': 'Token '+token},
+                    method: 'GET'
+                }).its('body').then( body =>{
+                    expect(body.articles[0].title).not.to.equal('Test')
+                })
+
+            })
     })
 
 })
