@@ -1,13 +1,26 @@
 {
     "baseUrl": "http://localhost:4200/",
-    "ignoreTestFiles":"**/examples/*",
+    "ignoreTestFiles": [
+        "**/examples/*",
+        "**/__snapshots__/*",
+        "**/__image_snapshots__/*"
+    ],
     "viewportHeight": 768,
     "viewportWidth": 1920,
     "video": false,
+    "reporter": "cypress-multi-reporters",
+    "reporterOptions": {
+        "configFile": "reporter-config.json"
+    },
     "env": {
         "RETRIES": 2,
         "username": "drummer.tony@gmail.com",
         "password": "cypresstest1",
-        "apiUrl": "https://conduit.productionready.io"
+        "apiUrl": "https://conduit.productionready.io",
+        "cypress-plugin-snapshots":{
+            "imageConfig":{
+                "threshold": 0.01
+            }
+        }
     }
 }
